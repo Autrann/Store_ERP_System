@@ -22,7 +22,7 @@ class ProductController extends Controller
 
             $products->where(function ($query) use ($search) {
                 $query->where('sku', 'like', "%{$search}%")
-                      ->orWhere('name', 'like', "%{$search}%");
+                    ->orWhere('name', 'like', "%{$search}%");
             });
         }
 
@@ -32,5 +32,27 @@ class ProductController extends Controller
                 'search' => $request->search ?? '',
             ],
         ]);
+    }
+
+    public function update(Request $request, Product $product)
+    {
+        $validated = $request->validate([
+            'name' => 'required|max:255',
+            'description' => 'nullable',
+            'sku' => 'required|max:255|unique:products,sku,' . $product->id,
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+        ]);
+
+        $product->update($validated);
+
+        return back();
+    }
+
+    public function destroy(Product $product)
+    {
+        $product->delete();
+
+        return back();
     }
 }
