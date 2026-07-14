@@ -1,5 +1,7 @@
-import { useState } from 'react';
-import { router } from '@inertiajs/react';
+import { useState } from "react";
+import { router } from "@inertiajs/react";
+
+import ProductImageViewer from "@/components/Product/ProductImageViewer";
 
 interface Props {
     product: any;
@@ -28,7 +30,7 @@ export default function ProductCard({ product }: Props) {
 
     function destroyProduct() {
         const confirmed = window.confirm(
-            '¿Estás completamente seguro de eliminar este producto?\n\nEsta acción eliminará el producto permanentemente y NO se puede deshacer.',
+            "¿Estás completamente seguro de eliminar este producto?\n\nEsta acción eliminará el producto permanentemente y NO se puede deshacer."
         );
 
         if (!confirmed) return;
@@ -42,24 +44,21 @@ export default function ProductCard({ product }: Props) {
         <div
             className={`flex gap-6 rounded-xl border p-5 shadow-sm transition ${
                 product.stock === 0
-                    ? 'border-red-200 bg-gray-100 opacity-60'
-                    : 'border-gray-200 bg-white'
+                    ? "border-red-200 bg-gray-100 opacity-60"
+                    : "border-gray-200 bg-white"
             }`}
         >
-            <img
-                src={
-                    product.images.length
-                        ? `/storage/${product.images[0].image}`
-                        : 'https://placehold.co/150'
-                }
-                className="h-36 w-36 rounded-lg object-cover"
+            <ProductImageViewer
+                productId={product.id}
+                images={product.images}
+                editing={editing}
             />
 
             <div className="flex-1">
                 {editing ? (
                     <>
                         <input
-                            className="mb-3 w-full rounded border p-2"
+                            className="mb-3 w-full rounded-lg border border-gray-300 p-2"
                             value={form.name}
                             onChange={(e) =>
                                 setForm({
@@ -70,7 +69,8 @@ export default function ProductCard({ product }: Props) {
                         />
 
                         <textarea
-                            className="mb-3 w-full rounded border p-2"
+                            className="mb-3 w-full rounded-lg border border-gray-300 p-2"
+                            rows={4}
                             value={form.description}
                             onChange={(e) =>
                                 setForm({
@@ -81,7 +81,7 @@ export default function ProductCard({ product }: Props) {
                         />
 
                         <input
-                            className="mb-3 w-full rounded border p-2"
+                            className="mb-3 w-full rounded-lg border border-gray-300 p-2"
                             value={form.sku}
                             onChange={(e) =>
                                 setForm({
@@ -94,24 +94,24 @@ export default function ProductCard({ product }: Props) {
                         <div className="grid grid-cols-2 gap-3">
                             <input
                                 type="number"
-                                className="rounded border p-2"
+                                className="rounded-lg border border-gray-300 p-2"
                                 value={form.price}
                                 onChange={(e) =>
                                     setForm({
                                         ...form,
-                                        price: e.target.value,
+                                        price: Number(e.target.value),
                                     })
                                 }
                             />
 
                             <input
                                 type="number"
-                                className="rounded border p-2"
+                                className="rounded-lg border border-gray-300 p-2"
                                 value={form.stock}
                                 onChange={(e) =>
                                     setForm({
                                         ...form,
-                                        stock: e.target.value,
+                                        stock: Number(e.target.value),
                                     })
                                 }
                             />
@@ -119,12 +119,13 @@ export default function ProductCard({ product }: Props) {
                     </>
                 ) : (
                     <>
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
                             <h2 className="text-xl font-semibold">
                                 {product.name}
                             </h2>
+
                             {product.stock === 0 && (
-                                <span className="mt-2 inline-block rounded bg-red-100 px-2 py-1 text-xs font-semibold text-red-700">
+                                <span className="rounded bg-red-100 px-2 py-1 text-xs font-semibold text-red-700">
                                     SIN STOCK
                                 </span>
                             )}
@@ -138,9 +139,11 @@ export default function ProductCard({ product }: Props) {
                             {product.description}
                         </p>
 
-                        <div className="mt-5 flex gap-10">
+                        <div className="mt-6 grid grid-cols-2 gap-6 md:grid-cols-4">
                             <div>
-                                <p className="text-sm text-gray-500">Marca</p>
+                                <p className="text-sm text-gray-500">
+                                    Marca
+                                </p>
 
                                 <p>{product.brand?.name}</p>
                             </div>
@@ -154,13 +157,19 @@ export default function ProductCard({ product }: Props) {
                             </div>
 
                             <div>
-                                <p className="text-sm text-gray-500">Precio</p>
+                                <p className="text-sm text-gray-500">
+                                    Precio
+                                </p>
 
-                                <p>${product.price}</p>
+                                <p className="font-semibold">
+                                    ${product.price}
+                                </p>
                             </div>
 
                             <div>
-                                <p className="text-sm text-gray-500">Stock</p>
+                                <p className="text-sm text-gray-500">
+                                    Stock
+                                </p>
 
                                 <p>{product.stock}</p>
                             </div>
@@ -169,26 +178,26 @@ export default function ProductCard({ product }: Props) {
                 )}
             </div>
 
-            <div className="flex flex-col gap-2">
+            <div className="flex min-w-32 flex-col gap-2">
                 {editing ? (
                     <>
                         <button
                             onClick={save}
-                            className="rounded bg-black px-4 py-2 text-white"
+                            className="rounded-lg bg-black px-4 py-2 text-white transition hover:bg-gray-800"
                         >
                             Guardar
                         </button>
 
                         <button
                             onClick={destroyProduct}
-                            className="rounded border border-red-300 px-4 py-2 text-red-600 transition hover:bg-red-50"
+                            className="rounded-lg border border-red-300 px-4 py-2 text-red-600 transition hover:bg-red-50"
                         >
                             Eliminar
                         </button>
 
                         <button
                             onClick={() => setEditing(false)}
-                            className="rounded border px-4 py-2"
+                            className="rounded-lg border border-gray-300 px-4 py-2 transition hover:bg-gray-100"
                         >
                             Cancelar
                         </button>
@@ -196,7 +205,7 @@ export default function ProductCard({ product }: Props) {
                 ) : (
                     <button
                         onClick={() => setEditing(true)}
-                        className="rounded border px-4 py-2"
+                        className="rounded-lg border border-gray-300 px-4 py-2 transition hover:bg-gray-100"
                     >
                         Editar
                     </button>

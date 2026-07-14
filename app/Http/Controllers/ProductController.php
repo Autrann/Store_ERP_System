@@ -36,57 +36,19 @@ class ProductController extends Controller
     }
 
     public function update(Request $request, Product $product)
-{
-    $validated = $request->validate([
-        'name' => 'required|max:255',
-        'description' => 'nullable',
-        'sku' => 'required|max:255|unique:products,sku,' . $product->id,
-        'price' => 'required|numeric|min:0',
-        'stock' => 'required|integer|min:0',
-        'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
-    ]);
+    {
+        $validated = $request->validate([
+            'name' => 'required|max:255',
+            'description' => 'nullable',
+            'sku' => 'required|max:255|unique:products,sku,' . $product->id,
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+        ]);
 
-    $product->update([
-        'name' => $validated['name'],
-        'description' => $validated['description'] ?? null,
-        'sku' => $validated['sku'],
-        'price' => $validated['price'],
-        'stock' => $validated['stock'],
-    ]);
+        $product->update($validated);
 
-    if ($request->hasFile('image')) {
-
-        $currentImage = $product->images()->first();
-
-        if ($currentImage) {
-
-            Storage::disk('public')->delete($currentImage->image);
-
-        }
-
-        $path = $request->file('image')->store(
-            'products',
-            'public'
-        );
-
-        if ($currentImage) {
-
-            $currentImage->update([
-                'image' => $path,
-            ]);
-
-        } else {
-
-            $product->images()->create([
-                'image' => $path,
-            ]);
-
-        }
-
+        return back();
     }
-
-    return back();
-}
 
     public function destroy(Product $product)
     {
