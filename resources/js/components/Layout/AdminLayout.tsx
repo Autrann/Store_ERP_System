@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { Link } from "@inertiajs/react";
 
 interface Props {
     children: ReactNode;
@@ -6,43 +7,41 @@ interface Props {
 
 export default function AdminLayout({ children }: Props) {
     return (
-        <div
-            style={{
-                display: "flex",
-                minHeight: "100vh",
-                fontFamily: "Arial",
-            }}
-        >
-            <aside
-                style={{
-                    width: 250,
-                    background: "#1f2937",
-                    color: "white",
-                    padding: 20,
-                }}
-            >
-                <h2>ERP</h2>
+        <div className="min-h-screen bg-gray-100">
+            <aside className="fixed left-0 top-0 flex h-screen w-64 flex-col border-r border-gray-200 bg-white">
+                <div className="border-b border-gray-200 p-6">
+                    <h1 className="text-xl font-bold tracking-wide">
+                        ERP
+                    </h1>
 
-                <hr />
+                    <p className="text-sm text-gray-500">
+                        Administración
+                    </p>
+                </div>
 
-                <p>Dashboard</p>
+                <nav className="flex flex-col gap-2 p-4">
+                    <Link
+                        href="/products"
+                        className="rounded-lg px-4 py-2 text-gray-700 transition hover:bg-gray-100"
+                    >
+                        Productos
+                    </Link>
 
-                <p>Productos</p>
+                    <button className="rounded-lg px-4 py-2 text-left text-gray-400">
+                        Categorías
+                    </button>
 
-                <p>Categorías</p>
+                    <button className="rounded-lg px-4 py-2 text-left text-gray-400">
+                        Marcas
+                    </button>
 
-                <p>Marcas</p>
-
-                <p>Pedidos</p>
+                    <button className="rounded-lg px-4 py-2 text-left text-gray-400">
+                        Pedidos
+                    </button>
+                </nav>
             </aside>
 
-            <main
-                style={{
-                    flex: 1,
-                    padding: 30,
-                    background: "#f5f5f5",
-                }}
-            >
+            <main className="ml-64 p-10">
                 {children}
             </main>
         </div>

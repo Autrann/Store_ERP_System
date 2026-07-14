@@ -3,18 +3,34 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('Products/index', [
-            'products' => Product::with([
+        $products = Product::query()
+            ->with([
                 'category',
                 'brand',
-                'images'
-            ])->get()
+                'images',
+            ]);
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $products->where(function ($query) use ($search) {
+                $query->where('sku', 'like', "%{$search}%")
+                      ->orWhere('name', 'like', "%{$search}%");
+            });
+        }
+
+        return Inertia::render('Products/Index', [
+            'products' => $products->get(),
+            'filters' => [
+                'search' => $request->search ?? '',
+            ],
         ]);
     }
 }
