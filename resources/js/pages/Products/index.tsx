@@ -1,3 +1,6 @@
+import { FormEvent, useState } from "react";
+import { router } from "@inertiajs/react";
+
 import AdminLayout from "@/components/Layout/AdminLayout";
 import ProductCard from "@/components/Product/ProductCard";
 
@@ -24,16 +27,34 @@ interface Product {
 
 interface Props {
     products: Product[];
+    filters: {
+        search: string;
+    };
 }
 
-export default function Index({ products }: Props) {
+export default function Index({ products, filters }: Props) {
+    const [search, setSearch] = useState(filters.search ?? "");
+
+    function submit(e: FormEvent) {
+        e.preventDefault();
+
+        router.get(
+            "/products",
+            {
+                search,
+            },
+            {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true,
+            }
+        );
+    }
+
     return (
         <AdminLayout>
-
             <div className="mb-10 flex items-center justify-between">
-
                 <div>
-
                     <h1 className="text-3xl font-bold">
                         Inventario
                     </h1>
@@ -41,40 +62,53 @@ export default function Index({ products }: Props) {
                     <p className="mt-1 text-gray-500">
                         Administra los productos de la tienda.
                     </p>
-
                 </div>
 
                 <button className="rounded-lg bg-black px-5 py-3 text-white transition hover:bg-gray-800">
                     Nuevo producto
                 </button>
-
             </div>
 
-            <div className="mb-8 flex gap-3">
-
+            <form
+                onSubmit={submit}
+                className="mb-8 flex gap-3"
+            >
                 <input
                     type="text"
                     placeholder="Buscar por SKU o nombre..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                     className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 outline-none focus:border-black"
                 />
 
-                <button className="rounded-lg border border-gray-300 bg-white px-6 transition hover:bg-gray-100">
+                <button
+                    type="submit"
+                    className="rounded-lg border border-gray-300 bg-white px-6 transition hover:bg-gray-100"
+                >
                     Buscar
                 </button>
-
-            </div>
+            </form>
 
             <div className="space-y-5">
+                {products.length > 0 ? (
+                    products.map((product) => (
+                        <ProductCard
+                            key={product.id}
+                            product={product}
+                        />
+                    ))
+                ) : (
+                    <div className="rounded-lg border border-dashed border-gray-300 bg-white p-10 text-center">
+                        <h2 className="text-lg font-semibold">
+                            No se encontraron productos
+                        </h2>
 
-                {products.map((product) => (
-                    <ProductCard
-                        key={product.id}
-                        product={product}
-                    />
-                ))}
-
+                        <p className="mt-2 text-gray-500">
+                            Intenta con otro nombre o SKU.
+                        </p>
+                    </div>
+                )}
             </div>
-
         </AdminLayout>
     );
 }

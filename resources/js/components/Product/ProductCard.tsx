@@ -49,7 +49,7 @@ export default function ProductCard({ product }: Props) {
             <img
                 src={
                     product.images.length
-                        ? '/' + product.images[0].image
+                        ? `/storage/${product.images[0].image}`
                         : 'https://placehold.co/150'
                 }
                 className="h-36 w-36 rounded-lg object-cover"
