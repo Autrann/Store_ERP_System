@@ -1,8 +1,9 @@
-import { FormEvent, useState } from "react";
-import { router } from "@inertiajs/react";
+import { Link, router } from '@inertiajs/react';
+import type { FormEvent } from 'react';
+import { useState } from 'react';
 
-import AdminLayout from "@/components/Layout/AdminLayout";
-import ProductCard from "@/components/Product/ProductCard";
+import AdminLayout from '@/components/Layout/AdminLayout';
+import ProductCard from '@/components/Product/ProductCard';
 
 interface Product {
     id: number;
@@ -33,13 +34,13 @@ interface Props {
 }
 
 export default function Index({ products, filters }: Props) {
-    const [search, setSearch] = useState(filters.search ?? "");
+    const [search, setSearch] = useState(filters.search ?? '');
 
     function submit(e: FormEvent) {
         e.preventDefault();
 
         router.get(
-            "/products",
+            '/products',
             {
                 search,
             },
@@ -47,31 +48,32 @@ export default function Index({ products, filters }: Props) {
                 preserveState: true,
                 preserveScroll: true,
                 replace: true,
-            }
+            },
         );
     }
 
     return (
         <AdminLayout>
-            <div className="mb-10 flex items-center justify-between">
+            <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:mb-10 sm:flex-row sm:items-center">
                 <div>
-                    <h1 className="text-3xl font-bold">
-                        Inventario
-                    </h1>
+                    <h1 className="text-3xl font-bold">Inventario</h1>
 
                     <p className="mt-1 text-gray-500">
                         Administra los productos de la tienda.
                     </p>
                 </div>
 
-                <button className="rounded-lg bg-black px-5 py-3 text-white transition hover:bg-gray-800">
+                <Link
+                    href="/products/create"
+                    className="w-full rounded-lg bg-black px-5 py-3 text-center text-white transition hover:bg-gray-800 sm:w-auto"
+                >
                     Nuevo producto
-                </button>
+                </Link>
             </div>
 
             <form
                 onSubmit={submit}
-                className="mb-8 flex gap-3"
+                className="mb-8 flex flex-col gap-3 sm:flex-row"
             >
                 <input
                     type="text"
@@ -83,7 +85,7 @@ export default function Index({ products, filters }: Props) {
 
                 <button
                     type="submit"
-                    className="rounded-lg border border-gray-300 bg-white px-6 transition hover:bg-gray-100"
+                    className="rounded-lg border border-gray-300 bg-white px-6 py-3 transition hover:bg-gray-100"
                 >
                     Buscar
                 </button>
@@ -92,10 +94,7 @@ export default function Index({ products, filters }: Props) {
             <div className="space-y-5">
                 {products.length > 0 ? (
                     products.map((product) => (
-                        <ProductCard
-                            key={product.id}
-                            product={product}
-                        />
+                        <ProductCard key={product.id} product={product} />
                     ))
                 ) : (
                     <div className="rounded-lg border border-dashed border-gray-300 bg-white p-10 text-center">

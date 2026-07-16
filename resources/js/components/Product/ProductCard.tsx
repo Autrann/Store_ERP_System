@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { router } from "@inertiajs/react";
+import { router } from '@inertiajs/react';
+import { useState } from 'react';
 
-import ProductImageViewer from "@/components/Product/ProductImageViewer";
+import ProductImageViewer from '@/components/Product/ProductImageViewer';
 
 interface Props {
     product: any;
@@ -30,10 +30,12 @@ export default function ProductCard({ product }: Props) {
 
     function destroyProduct() {
         const confirmed = window.confirm(
-            "¿Estás completamente seguro de eliminar este producto?\n\nEsta acción eliminará el producto permanentemente y NO se puede deshacer."
+            '¿Estás completamente seguro de eliminar este producto?\n\nEsta acción eliminará el producto permanentemente y NO se puede deshacer.',
         );
 
-        if (!confirmed) return;
+        if (!confirmed) {
+            return;
+        }
 
         router.delete(`/products/${product.id}`, {
             preserveScroll: true,
@@ -42,10 +44,10 @@ export default function ProductCard({ product }: Props) {
 
     return (
         <div
-            className={`flex gap-6 rounded-xl border p-5 shadow-sm transition ${
+            className={`flex flex-col gap-5 rounded-xl border p-4 shadow-sm transition sm:p-5 md:flex-row md:gap-6 ${
                 product.stock === 0
-                    ? "border-red-200 bg-gray-100 opacity-60"
-                    : "border-gray-200 bg-white"
+                    ? 'border-red-200 bg-gray-100 opacity-60'
+                    : 'border-gray-200 bg-white'
             }`}
         >
             <ProductImageViewer
@@ -54,7 +56,7 @@ export default function ProductCard({ product }: Props) {
                 editing={editing}
             />
 
-            <div className="flex-1">
+            <div className="min-w-0 flex-1">
                 {editing ? (
                     <>
                         <input
@@ -91,7 +93,7 @@ export default function ProductCard({ product }: Props) {
                             }
                         />
 
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="grid gap-3 sm:grid-cols-2">
                             <input
                                 type="number"
                                 className="rounded-lg border border-gray-300 p-2"
@@ -119,8 +121,8 @@ export default function ProductCard({ product }: Props) {
                     </>
                 ) : (
                     <>
-                        <div className="flex items-center gap-3">
-                            <h2 className="text-xl font-semibold">
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                            <h2 className="text-xl font-semibold break-words">
                                 {product.name}
                             </h2>
 
@@ -139,11 +141,9 @@ export default function ProductCard({ product }: Props) {
                             {product.description}
                         </p>
 
-                        <div className="mt-6 grid grid-cols-2 gap-6 md:grid-cols-4">
+                        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 md:gap-6">
                             <div>
-                                <p className="text-sm text-gray-500">
-                                    Marca
-                                </p>
+                                <p className="text-sm text-gray-500">Marca</p>
 
                                 <p>{product.brand?.name}</p>
                             </div>
@@ -157,9 +157,7 @@ export default function ProductCard({ product }: Props) {
                             </div>
 
                             <div>
-                                <p className="text-sm text-gray-500">
-                                    Precio
-                                </p>
+                                <p className="text-sm text-gray-500">Precio</p>
 
                                 <p className="font-semibold">
                                     ${product.price}
@@ -167,9 +165,7 @@ export default function ProductCard({ product }: Props) {
                             </div>
 
                             <div>
-                                <p className="text-sm text-gray-500">
-                                    Stock
-                                </p>
+                                <p className="text-sm text-gray-500">Stock</p>
 
                                 <p>{product.stock}</p>
                             </div>
@@ -178,7 +174,7 @@ export default function ProductCard({ product }: Props) {
                 )}
             </div>
 
-            <div className="flex min-w-32 flex-col gap-2">
+            <div className="flex w-full flex-col gap-2 md:w-auto md:min-w-32">
                 {editing ? (
                     <>
                         <button

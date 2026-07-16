@@ -71,7 +71,7 @@ export default function ProductImageViewer({
 
     return (
         <>
-            <div className="group relative h-36 w-36 shrink-0 overflow-hidden rounded-xl border border-gray-200 bg-gray-50 shadow-sm">
+            <div className="group relative aspect-square w-full max-w-56 shrink-0 overflow-hidden rounded-xl border border-gray-200 bg-gray-50 shadow-sm sm:h-36 sm:w-36">
                 <button
                     type="button"
                     className="h-full w-full cursor-pointer"
